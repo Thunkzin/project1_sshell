@@ -13,7 +13,7 @@
 int main(void)
 {
         char cmd[CMDLINE_MAX];
-        char args[TOKEN_LENGTH_MAX];
+        /* char args[TOKEN_LENGTH_MAX];  */
 
         while (1) {
                 char *nl;
@@ -38,28 +38,30 @@ int main(void)
                         *nl = '\0';
 
                 /* Builtin command */
+                //exit
                 if (!strcmp(cmd, "exit")) {
                         fprintf(stderr, "Bye...\n");
                         printf("+ completed %s [0]\n", cmd);
                         break;
                 }
+                //pwd
                 if (!strcmp(cmd, "pwd")) {
-                        
+                        char cwd[CMDLINE_MAX];
+                        getcwd(cwd, sizeof(cwd));
+                        printf("%s\n",cwd);
                         printf("+ completed %s [0]\n", cmd);
-                        break;
+                        continue;
                 }
+                //cd
                 if (!strcmp(cmd, "cd")) {
-                        
                         printf("+ completed %s [0]\n", cmd);
-                        break;
+                        continue;
                 }
-
                 /* Regular command */
                 // Parsing the commend before 
                 retval = system(cmd);
                 printf("+ completed %s [%d]\n", cmd, retval);
-                fprintf(stderr, "Return status value for '%s': %d\n",
-                        cmd, retval);
+                fprintf(stderr, "Return status value for '%s': %d\n", cmd, retval);     
                         
         }
         return EXIT_SUCCESS;
@@ -96,6 +98,8 @@ char parsing_command(char *cmd){
         return(0);
 }
 
+/*
+
 char reading_command(char cmd){
 
 }
@@ -111,3 +115,4 @@ void pipe(){
 // 1 Parsing command
 
 // 
+*/
