@@ -8,10 +8,12 @@
 #define CMDLINE_MAX 512
 #define ARGUMENT_MAX 16
 #define TOKEN_LENGTH_MAX 32
+#define PIPE_NUMBER_MAX 3
 
 int main(void)
 {
         char cmd[CMDLINE_MAX];
+        char args[TOKEN_LENGTH_MAX];
 
         while (1) {
                 char *nl;
@@ -38,17 +40,22 @@ int main(void)
                 /* Builtin command */
                 if (!strcmp(cmd, "exit")) {
                         fprintf(stderr, "Bye...\n");
-                        break;
-                }
-                if (!strcmp(cmd, "cd")) {
-                        fprintf(stderr, "Bye...\n");
+                        printf("+ completed %s [0]\n", cmd);
                         break;
                 }
                 if (!strcmp(cmd, "pwd")) {
-                        fprintf(stderr, "Bye...\n");
+                        
+                        printf("+ completed %s [0]\n", cmd);
                         break;
                 }
+                if (!strcmp(cmd, "cd")) {
+                        
+                        printf("+ completed %s [0]\n", cmd);
+                        break;
+                }
+
                 /* Regular command */
+                // Parsing the commend before 
                 retval = system(cmd);
                 printf("+ completed %s [%d]\n", cmd, retval);
                 fprintf(stderr, "Return status value for '%s': %d\n",
@@ -61,8 +68,8 @@ int main(void)
 int system_sshell(char *cmd, char *args[]){
         pid_t pid = fork();
         if(pid == 0){
-                execv(cmd, args);
-                perror("execv");
+                execvp(cmd, args);
+                perror("execvp");
                 exit(1);
         }else if(pid > 0){
                 int status;
@@ -75,3 +82,32 @@ int system_sshell(char *cmd, char *args[]){
         }
         return 0;
 }
+
+char parsing_command(char *cmd){
+        const char s[2] = " ";
+        char *token;
+        /* get the first token */
+        token = strtok(cmd, s);
+        /* walk through other tokens */
+        while( token != NULL ) {
+                printf( " %s\n", token );
+                token = strtok(NULL, s);
+        }
+        return(0);
+}
+
+char reading_command(char cmd){
+
+}
+
+void redirection(){
+
+}
+
+void pipe(){
+       // program1 > file && file > program2
+}
+
+// 1 Parsing command
+
+// 
