@@ -134,14 +134,14 @@ int main(void){
                         *nl = '\0';
                 /* Builtin command */
                 if (!strcmp(args[0], "exit")) {
-                        fprintf(stderr, "Bye...\n");
+                        fprintf(stderr, "\nBye...\n");
                         fprintf(stderr, "+ completed '%s' [0]\n", cmd);
                         break;
                 }
                 if (!strcmp(args[0], "pwd")) {
                         char cwd[CMDLINE_MAX];
                         getcwd(cwd, sizeof(cwd));
-                        fprintf(stdout, "%s\n",cwd);
+                        fprintf(stdout, "\n%s\n",cwd);
                         fprintf(stderr, "+ completed '%s' [0]\n", cmd);
                         continue;
                 }
@@ -151,6 +151,7 @@ int main(void){
                         continue;
                 }
                 /* Regular command */
+                fprintf(stdout, "\n");
                 retval = system_sshell(args);
                 fprintf(stderr, "+ completed '%s' [%d]\n", cmd, retval);   
                         
