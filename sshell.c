@@ -137,7 +137,6 @@ int main(void){
 
                 /*
                 printf for test
-                */
                 printf("args[0]: %s\n",args[0]);
                 printf("args[1]: %s\n",args[1]);
                 printf("args[2]: %s\n",args[2]);
@@ -145,6 +144,7 @@ int main(void){
                 printf("args[4]: %s\n",args[4]);
                 printf("args[5]: %s\n",args[5]);
                 printf("args[6]: %s\n",args[6]);
+                */
 
                 /* Redo the loop if the error is received */
                 if (args[0]== NULL){
