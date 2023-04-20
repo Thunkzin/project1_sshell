@@ -134,12 +134,12 @@ int main(void){
 
 
                 /* Builtin command */
-                if (!strcmp(cmd, "exit")) {
+                if (!strcmp(args[0], "exit")) {
                         fprintf(stderr, "Bye...\n");
                         fprintf(stderr, "+ completed '%s' [0]\n", cmd);
                         break;
                 }
-                if (!strcmp(cmd, "pwd")) {
+                if (!strcmp(args[0], "pwd")) {
                         char cwd[CMDLINE_MAX];
                         getcwd(cwd, sizeof(cwd));
                         fprintf(stdout, "%s\n",cwd);
