@@ -69,7 +69,7 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_
                 fprintf(stderr,"Error: too many process arguments\n");
                 args[0] = NULL;
         }
-        args[position+1] = "\0";
+        args[position] = "\0";
         return(args);
 }
 
@@ -154,10 +154,10 @@ int main(void){
                 fprintf(stdout, "\n");
                 retval = system_sshell(args);
                 fprintf(stderr, "+ completed '%s' [%d]\n", cmd, retval);   
-                        
+                
+
         }
         return EXIT_SUCCESS;
 }
-
 
 
