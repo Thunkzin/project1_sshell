@@ -115,7 +115,7 @@ int main(void){
                 int retval;
 
                 /* Print prompt */
-                printf("sshell@ucd$ ");
+                fprintf(stdout,"sshell@ucd$ ");
                 fflush(stdout);
 
                 /* Get command line */
