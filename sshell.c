@@ -185,7 +185,7 @@ int main(void){
                 if (!strcmp(args[0], "pwd")) {
                         char cwd[CMDLINE_MAX];
                         getcwd(cwd, sizeof(cwd));
-                        fprintf(stderr, "%s\n",cwd);
+                        printf("%s\n",cwd);
                         fprintf(stdout, "+ completed '%s' [0]\n", cmd);
                         continue;
                 }
