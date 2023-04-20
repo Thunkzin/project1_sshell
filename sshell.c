@@ -25,6 +25,7 @@ int system_sshell(char **args){
        }
 
         */
+       fprintf(stdout, "\n");
         pid_t pid;
         pid = fork();
         if(pid == 0){
@@ -120,19 +121,8 @@ int main(void){
                 fgets(cmd, CMDLINE_MAX, stdin);
                 /* Remove the last \0 */
                 cmd[strlen(cmd)-1] = '\0';
-                /*
-                while(!(strchr(cmd, '>') == NULL)){
-                        char *mod_cmd[] = (char*)malloc(CMDLINE_MAX);
-                        for (int original_string_count = 0, new_string_count = 0 ; original_string_count < strlen(cmd); original_string_count++, new_string_count++){
-                                if (cmd[original_string_count] == ">") {
-                                        cmd[original_string_count] = "to_right";
-                                        new_string_count += 7;
-                                }
-                                else cmd[original_string_count] = cmd[new_string_count];
-                        }
-                }
-                */
 
+                
                 /* Test
                 printf("cmd = :%s \n", cmd);
                 */
