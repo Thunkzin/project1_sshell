@@ -184,19 +184,19 @@ int main(void){
                 if (!strcmp(args[0], "pwd")) {
                         char cwd[CMDLINE_MAX];
                         getcwd(cwd, sizeof(cwd));
-                        printf("%s\n",cwd);
-                        printf("+ completed %s [0]\n", args[0]);
+                        fprintf(stdout, "%s\n",cwd);
+                        fprintf(stdout, "+ completed %s [0]\n", args[0]);
                         continue;
                 }
                 if (!strcmp(args[0], "cd")) {
                         chdir(args[1]);
-                        printf("+ completed %s [0]\n", args[0]);
+                        fprintf(stdout, "+ completed %s [0]\n", args[0]);
                         continue;
                 }
                 /* Regular command */
                 // Parsing the commend before 
                 retval = system_sshell(args);
-                printf("+ completed %s [%d]\n", cmd, retval);   
+                fprintf(stdout, "+ completed %s [%d]\n", cmd, retval);   
                         
         }
         return EXIT_SUCCESS;
