@@ -12,7 +12,6 @@
 
 
 int system_sshell(char **args){
-        pid_t pid = fork();
 
         /*
         if(<, >, is in args[somewhere]){
@@ -26,12 +25,15 @@ int system_sshell(char **args){
        }
 
         */
-
+        pid_t pid;
+        pid = fork();
         if(pid == 0){
+                /* child */
                 execvp(args[0], args);
                 perror("execvp");
-                exit(1);
+                exit(1);       
         }else if(pid > 0){
+                /* parent */
                 int status;
                 waitpid(pid, &status, 0);
         }else{
@@ -97,6 +99,7 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_
                 fprintf(stderr,"Error: too many process arguments\n");
                 args[0] = NULL;
         }
+        args[position+1] = NULL;
         return(args);
 }
 
@@ -190,7 +193,6 @@ int main(void){
                         chdir(args[1]);
                         perror("Error");
                         fprintf(stdout, "+ completed %s [0]\n", cmd);
-
                         continue;
                 }
                 /* Regular command */
