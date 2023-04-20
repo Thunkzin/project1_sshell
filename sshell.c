@@ -50,6 +50,7 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_
         char **args = malloc(ARGUMENT_MAX);
         int position = 0;
         strcpy(cmd_copy, cmd);
+
        /* Get the first Token , program, args[0]*/
         token = strtok(cmd_copy, " ");
         /*
@@ -60,16 +61,13 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_
                 // Store the rest of the tokens into args
                 args[position] = token;
                 position += 1;
-
-
-
                 token = strtok(NULL, SIGN_TO_BE_PARSED);
         }
         if(position >= ARGUMENT_MAX){
                 fprintf(stderr,"Error: too many process arguments\n");
                 args[0] = NULL;
         }
-        args[position] = "\0";
+
         return(args);
 }
 
@@ -79,6 +77,7 @@ int main(void){
         char cmd_copy[CMDLINE_MAX];
         char **args;
 
+
         while (1) {
                 char *nl;
                 int retval;
@@ -86,13 +85,12 @@ int main(void){
                 /* Print prompt */
                 printf("sshell@ucd$ ");
                 fflush(stdout);
-
                 /* Get command line */
                 fgets(cmd, CMDLINE_MAX, stdin);
+                
                 /* Remove the last \0 */
                 cmd[strlen(cmd)-1] = '\0';
 
-                
                 /* Test
                 printf("cmd = :%s \n", cmd);
                 */
@@ -116,7 +114,7 @@ int main(void){
                 printf("args[6]: %s\n",args[6]);
                 */
 
-                /* Redo the loop if the error is received */
+                /* Redo the loop if no input */
                 if (args[0]== NULL){
                         continue;
                 }
@@ -132,6 +130,8 @@ int main(void){
                 nl = strchr(cmd, '\n');
                 if (nl)
                         *nl = '\0';
+
+
                 /* Builtin command */
                 if (!strcmp(args[0], "exit")) {
                         fprintf(stderr, "Bye...\n");
@@ -151,11 +151,8 @@ int main(void){
                         continue;
                 }
                 /* Regular command */
-                fprintf(stdout, "\n");
                 retval = system_sshell(args);
                 fprintf(stderr, "+ completed '%s' [%d]\n", cmd, retval);   
-                
-
         }
         return EXIT_SUCCESS;
 }
