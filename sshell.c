@@ -30,7 +30,6 @@ int system_sshell(char **args){
         if(pid == 0){
                 /* child */
                 execvp(args[0], args);
-                perror("execvp");
                 exit(1);       
         }else if(pid > 0){
                 /* parent */
@@ -173,8 +172,6 @@ int main(void){
                 nl = strchr(cmd, '\n');
                 if (nl)
                         *nl = '\0';
-
-                printf("\n");
                 /* Builtin command */
                 if (!strcmp(args[0], "exit")) {
                         fprintf(stderr, "Bye...\n");
@@ -194,7 +191,6 @@ int main(void){
                         continue;
                 }
                 /* Regular command */
-                fprintf(stdout, "\n");
                 retval = system_sshell(args);
                 fprintf(stdout, "+ completed '%s' [%d]\n", cmd, retval);   
                         
