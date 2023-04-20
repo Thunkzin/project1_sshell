@@ -194,6 +194,7 @@ int main(void){
                         continue;
                 }
                 /* Regular command */
+                fprintf(stdout, "\n");
                 retval = system_sshell(args);
                 fprintf(stdout, "+ completed '%s' [%d]\n", cmd, retval);   
                         
