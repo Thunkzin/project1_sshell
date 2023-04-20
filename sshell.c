@@ -52,7 +52,6 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX],char cmd_copy[CMDLINE_M
                 /* Set args[0] to be NULL so the shell will start a new loop */
                 args[0] = NULL;
         }
-        args[position] = NULL;
         return(args);
 }
 
