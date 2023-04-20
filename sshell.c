@@ -174,7 +174,6 @@ int main(void){
                 if (nl)
                         *nl = '\0';
 
-                fprintf(stdout,"\n");
 
                 /* Builtin command */
                 if (!strcmp(args[0], "exit")) {
@@ -191,7 +190,6 @@ int main(void){
                 }
                 if (!strcmp(args[0], "cd")) {
                         chdir(args[1]);
-                        perror("Error");
                         fprintf(stderr, "+ completed '%s' [0]\n", cmd);
                         continue;
                 }
