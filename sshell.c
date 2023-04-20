@@ -115,7 +115,7 @@ int main(void){
                 */
 
                 /* Redo the loop if no input */
-                if (args[0]== NULL){
+                if (cmd[strlen(cmd)-1] == '\0'){
                         continue;
                 }
 
