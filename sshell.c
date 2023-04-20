@@ -184,7 +184,7 @@ int main(void){
                 if (!strcmp(args[0], "pwd")) {
                         char cwd[CMDLINE_MAX];
                         getcwd(cwd, sizeof(cwd));
-                        fprintf(stderr, "%s\n",cwd);
+                        fprintf(stdout, "%s\n",cwd);
                         fprintf(stderr, "+ completed '%s' [0]\n", cmd);
                         continue;
                 }
@@ -195,10 +195,9 @@ int main(void){
                 }
                 /* Regular command */
                 retval = system_sshell(args);
-                fprintf(stderr, "+ completed '%s' [%d]\n", cmd, retval);   
+                fprintf(stdout, "+ completed '%s' [%d]\n", cmd, retval);   
                         
         }
         return EXIT_SUCCESS;
 }
 
-           
