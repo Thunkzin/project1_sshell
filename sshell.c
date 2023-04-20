@@ -99,7 +99,8 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_
                 fprintf(stderr,"Error: too many process arguments\n");
                 args[0] = NULL;
         }
-        args[position] = "\n";
+        args[position] = "\0";
+        args[position+1] = "\n"
         return(args);
 }
 
