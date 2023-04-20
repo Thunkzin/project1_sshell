@@ -100,7 +100,6 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_
                 args[0] = NULL;
         }
         args[position] = "\0";
-        args[position+1] = "\n";
         return(args);
 }
 
