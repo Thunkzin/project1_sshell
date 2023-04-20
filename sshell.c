@@ -196,7 +196,7 @@ int main(void){
                 /* Regular command */
                 // Parsing the commend before 
                 retval = system_sshell(args);
-                fprintf(stderr, "+ completed '%s' [%d]\n", cmd, retval);   
+                fprintf(stdout, "+ completed '%s' [%d]\n", cmd, retval);   
                         
         }
         return EXIT_SUCCESS;
