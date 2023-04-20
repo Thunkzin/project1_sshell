@@ -178,7 +178,7 @@ int main(void){
                 /* Builtin command */
                 if (!strcmp(args[0], "exit")) {
                         fprintf(stderr, "Bye...\n");
-                        
+                        fprintf(stderr, "+ completed '%s' [0]\n", cmd);
                         break;
                 }
                 if (!strcmp(args[0], "pwd")) {
