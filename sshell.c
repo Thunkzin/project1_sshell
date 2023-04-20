@@ -45,41 +45,11 @@ int system_sshell(char **args){
 
 char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_MAX]){
 
-        #define SIGN_TO_BE_PARSED " >|\n"
-        /*int parsing_sign = 0;*/
+        #define SIGN_TO_BE_PARSED " >|"
         char *token;
         char **args = malloc(ARGUMENT_MAX);
         int position = 0;
         strcpy(cmd_copy, cmd);
-
-        /*
-        char *redirect_to_left;
-        char *redirect_to_right;
-        char *pipe;
-        */
-       /*
-        printf("where > appears: %s \n",strchr(cmd_copy, '>'));
-       */
-
-        /*
-        if(strchr(cmd_copy, '<')) != NULL){
-                redirection()
-        }
-        then there's no < in command
-        */
-
-
-        /*
-        if((strchr(cmd_copy, '<') != NULL)){
-                token = strtok(cmd_copy, "<");
-                printf("there's a < \n");
-
-        }else if ((strchr(cmd_copy, '|') != NULL)){
-                token = strtok(cmd_copy, "|");
-                printf("cmd_copy:%s \n", cmd_copy);
-                printf("there's a | \n");
-        }
-        */
        /* Get the first Token , program, args[0]*/
         token = strtok(cmd_copy, " ");
         /*
@@ -187,6 +157,5 @@ int main(void){
         }
         return EXIT_SUCCESS;
 }
-
 
 
