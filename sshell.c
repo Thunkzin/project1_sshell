@@ -18,11 +18,10 @@ int system_sshell(char **args){
         pid = fork();
         if(pid == 0){
                 /* child */
-                if(execvp(args[0], args) != 0){
-                        perror("execvp");
-                        fprintf(stderr,"Error: command not found\n");
-                        return 1;
-                }
+                execvp(args[0], args);
+                perror("execvp");
+                fprintf(stderr,"Error: command not found\n");
+                exit(1);
         }else if(pid > 0){
                 /* parent */
                 int status;
@@ -53,8 +52,14 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX],char cmd_copy[CMDLINE_M
                 /* Set args[0] to be NULL so the shell will start a new loop */
                 args[0] = NULL;
         }
+        args[position] = NULL;
         return(args);
 }
+
+// void redirection(char** before_redirection, char** after_redirection){
+
+// }
+
 int main(void){
         char cmd[CMDLINE_MAX];
         char cmd_copy[CMDLINE_MAX];
@@ -66,9 +71,6 @@ int main(void){
         while (1) {
                 char *nl;
                 int retval;
-
-               
-
                 /* Print prompt */
                 printf("sshell@ucd$ ");
                 fflush(stdout);
@@ -78,27 +80,17 @@ int main(void){
                 
                 /* Remove the last \0 */
                 // cmd[strlen(cmd)-1] = '\0';
-                // cmd[strlen(cmd)-1] = '\0';
-                /* 
-                if(strchr(cmd,'<') != NULL){
-                        // cmd contains <
-                        first_args_redirection_raw = parsing_command_to_argument(cmd, cmd_copy, '<')
-                        first_args_redirection = parsing_command_to_argument(args[0], cmd_copy, ' ');
-                        args = first_args_redirection;
-                }
-                
-                */
 
                 /* Parse the cmd into **args[] */
                 args = parsing_command_to_argument(cmd, cmd_copy, " ");
 
-                // printf("args[0]: %s\n",args[0]);
-                // printf("args[1]: %s\n",args[1]);
-                // printf("args[2]: %s\n",args[2]);
-                // printf("args[3]: %s\n",args[3]);
-                // printf("args[4]: %s\n",args[4]);
-                // printf("args[5]: %s\n",args[5]);
-                // printf("args[6]: %s\n",args[6]);
+                printf("args[0]: %s\n",args[0]);
+                printf("args[1]: %s\n",args[1]);
+                printf("args[2]: %s\n",args[2]);
+                printf("args[3]: %s\n",args[3]);
+                printf("args[4]: %s\n",args[4]);
+                printf("args[5]: %s\n",args[5]);
+                printf("args[6]: %s\n",args[6]);
 
 
                 /* Redo the loop if no input */
@@ -148,6 +140,8 @@ int main(void){
                 /* Regular command */
                 retval = system_sshell(args);
                 fprintf(stderr, "+ completed '%s' [%d]\n", cmd, retval);   
+                free(args);
         }
+
         return EXIT_SUCCESS;
 }
