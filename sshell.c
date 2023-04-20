@@ -84,13 +84,13 @@ int main(void){
                 /* Parse the cmd into **args[] */
                 args = parsing_command_to_argument(cmd, cmd_copy, " ");
 
-                printf("args[0]: %s\n",args[0]);
-                printf("args[1]: %s\n",args[1]);
-                printf("args[2]: %s\n",args[2]);
-                printf("args[3]: %s\n",args[3]);
-                printf("args[4]: %s\n",args[4]);
-                printf("args[5]: %s\n",args[5]);
-                printf("args[6]: %s\n",args[6]);
+                // printf("args[0]: %s\n",args[0]);
+                // printf("args[1]: %s\n",args[1]);
+                // printf("args[2]: %s\n",args[2]);
+                // printf("args[3]: %s\n",args[3]);
+                // printf("args[4]: %s\n",args[4]);
+                // printf("args[5]: %s\n",args[5]);
+                // printf("args[6]: %s\n",args[6]);
 
 
                 /* Redo the loop if no input */
