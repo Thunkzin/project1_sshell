@@ -176,19 +176,21 @@ int main(void){
                 /* Builtin command */
                 if (!strcmp(args[0], "exit")) {
                         fprintf(stderr, "Bye...\n");
-                        fprintf(stderr, "+ completed '%s' [0]\n", args[0]);
+                        fprintf(stderr, "+ completed '%s' [0]\n", cmd);
                         break;
                 }
                 if (!strcmp(args[0], "pwd")) {
                         char cwd[CMDLINE_MAX];
                         getcwd(cwd, sizeof(cwd));
                         fprintf(stdout, "%s\n",cwd);
-                        fprintf(stdout, "+ completed %s [0]\n", args[0]);
+                        fprintf(stdout, "+ completed %s [0]\n", cmd);
                         continue;
                 }
                 if (!strcmp(args[0], "cd")) {
                         chdir(args[1]);
-                        fprintf(stdout, "+ completed %s [0]\n", args[0]);
+                        perror("Error");
+                        fprintf(stdout, "+ completed %s [0]\n", cmd);
+
                         continue;
                 }
                 /* Regular command */
