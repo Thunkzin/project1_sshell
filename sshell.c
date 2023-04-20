@@ -59,6 +59,9 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_
         char *redirect_to_right;
         char *pipe;
         */
+       /*
+        printf("where > appears: %s \n",strchr(cmd_copy, '>'));
+       */
 
         /*
         if(strchr(cmd_copy, '<')) != NULL){
@@ -81,6 +84,9 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_
         */
        /* Get the first Token , program, args[0]*/
         token = strtok(cmd_copy, " ");
+        /*
+        printf("token: %s \n",token);
+        */
 
         while(token != NULL) {
                 // Store the rest of the tokens into args
@@ -143,8 +149,14 @@ int main(void){
 
                 /*
                 printf for test
+                printf("args[0]: %s\n",args[0]);
+                printf("args[1]: %s\n",args[1]);
+                printf("args[2]: %s\n",args[2]);
+                printf("args[3]: %s\n",args[3]);
+                printf("args[4]: %s\n",args[4]);
+                printf("args[5]: %s\n",args[5]);
+                printf("args[6]: %s\n",args[6]);
                 */
-
 
                 /* Redo the loop if the error is received */
                 if (args[0]== NULL){
@@ -166,7 +178,7 @@ int main(void){
                 /* Builtin command */
                 if (!strcmp(args[0], "exit")) {
                         fprintf(stderr, "Bye...\n");
-                        printf("+ completed %s [0]\n", args[0]);
+                        fprintf(stderr, "+ completed %s [0]\n", args[0]);
                         break;
                 }
                 if (!strcmp(args[0], "pwd")) {
