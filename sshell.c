@@ -140,7 +140,7 @@ int main(void){
                 /* Regular command */
                 retval = system_sshell(args);
                 fprintf(stderr, "+ completed '%s' [%d]\n", cmd, retval);   
-                free(args);
+
         }
 
         return EXIT_SUCCESS;
