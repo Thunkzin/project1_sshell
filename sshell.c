@@ -141,7 +141,7 @@ int main(void){
 
                 /* Parse the cmd into **args[] */
                 args = parsing_command_to_argument(cmd, cmd_copy);
-               
+
                 /* Test
                 printf("cmd = :%s \n", cmd);
                 */
@@ -174,11 +174,11 @@ int main(void){
                 if (nl)
                         *nl = '\0';
 
-
+                printf("\n");
                 /* Builtin command */
                 if (!strcmp(args[0], "exit")) {
                         fprintf(stderr, "Bye...\n");
-                        fprintf(stderr, "+ completed '%s' [0]\n", cmd);
+                        
                         break;
                 }
                 if (!strcmp(args[0], "pwd")) {
