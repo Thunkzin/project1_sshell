@@ -25,12 +25,12 @@ int system_sshell(char **args){
        }
 
         */
-       fprintf(stdout, "\n");
         pid_t pid;
         pid = fork();
         if(pid == 0){
                 /* child */
                 execvp(args[0], args);
+                perror("execvp");
                 exit(1);       
         }else if(pid > 0){
                 /* parent */
@@ -99,7 +99,7 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_
                 fprintf(stderr,"Error: too many process arguments\n");
                 args[0] = NULL;
         }
-        args[position+1] = "\0";
+        args[position] = "\n";
         return(args);
 }
 
@@ -137,6 +137,7 @@ int main(void){
 
                 /*
                 printf for test
+                */
                 printf("args[0]: %s\n",args[0]);
                 printf("args[1]: %s\n",args[1]);
                 printf("args[2]: %s\n",args[2]);
@@ -144,7 +145,6 @@ int main(void){
                 printf("args[4]: %s\n",args[4]);
                 printf("args[5]: %s\n",args[5]);
                 printf("args[6]: %s\n",args[6]);
-                */
 
                 /* Redo the loop if the error is received */
                 if (args[0]== NULL){
