@@ -31,7 +31,7 @@ int system_sshell(char **args){
         return 0;
 }
 
-char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_MAX]){
+char** parsing_command_to_argument(char cmd[CMDLINE_MAX],char cmd_copy[CMDLINE_MAX] , char to_be_parsed[2]){
         #define SIGN_TO_BE_PARSED " \0"
         char *token;
         char **args = malloc(ARGUMENT_MAX);
@@ -40,7 +40,7 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_
         cmd_copy[strlen(cmd_copy)-1] = '\0';
 
        /* Get the first Token , program, args[0]*/
-        token = strtok(cmd_copy, SIGN_TO_BE_PARSED);
+        token = strtok(cmd_copy, to_be_parsed);
 
         while(token != NULL) {
                 // Store the rest of the tokens into args[]
@@ -55,20 +55,6 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_
         }
         return(args);
 }
-/*
-char** parsing_command_to_argument_with_redirection(char **args){
-        char **args_before_redirection = malloc(ARGUMENT_MAX);
-        int arg_order = 0;
-        while(arg_order <= position_white_space){
-                if(strchr(arg[arg_order],'<' != NULL)){
-                        for(int i = 0 ; i < arg_order ; i++)
-                        args_before_redirection[i] = args[i];
-                }
-                
-        }
-        return args_before_redirection;
-}
-*/
 int main(void){
         char cmd[CMDLINE_MAX];
         char cmd_copy[CMDLINE_MAX];
@@ -104,7 +90,7 @@ int main(void){
                 */
 
                 /* Parse the cmd into **args[] */
-                args = parsing_command_to_argument(cmd,cmd_copy);
+                args = parsing_command_to_argument(cmd, cmd_copy, " ");
 
                 // printf("args[0]: %s\n",args[0]);
                 // printf("args[1]: %s\n",args[1]);
