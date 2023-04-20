@@ -99,7 +99,7 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_
                 fprintf(stderr,"Error: too many process arguments\n");
                 args[0] = NULL;
         }
-        args[position+1] = NULL;
+        args[position+1] = "\0";
         return(args);
 }
 
@@ -114,7 +114,7 @@ int main(void){
                 int retval;
 
                 /* Print prompt */
-                fprintf(stdout,"sshell@ucd$ ");
+                printf("sshell@ucd$ ");
                 fflush(stdout);
 
                 /* Get command line */
@@ -185,14 +185,14 @@ int main(void){
                 if (!strcmp(args[0], "pwd")) {
                         char cwd[CMDLINE_MAX];
                         getcwd(cwd, sizeof(cwd));
-                        fprintf(stdout, "%s\n",cwd);
-                        fprintf(stdout, "+ completed %s [0]\n", cmd);
+                        fprintf(stderr, "%s\n",cwd);
+                        fprintf(stderr, "+ completed '%s' [0]\n", cmd);
                         continue;
                 }
                 if (!strcmp(args[0], "cd")) {
                         chdir(args[1]);
                         perror("Error");
-                        fprintf(stdout, "+ completed %s [0]\n", cmd);
+                        fprintf(stderr, "+ completed '%s' [0]\n", cmd);
                         continue;
                 }
                 /* Regular command */
