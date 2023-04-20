@@ -134,7 +134,7 @@ int main(void){
                         *nl = '\0';
                 /* Builtin command */
                 if (!strcmp(args[0], "exit")) {
-                        fprintf(stderr, "\nBye...\n");
+                        fprintf(stderr, "Bye...\n");
                         fprintf(stderr, "+ completed '%s' [0]\n", cmd);
                         break;
                 }
@@ -158,5 +158,6 @@ int main(void){
         }
         return EXIT_SUCCESS;
 }
+
 
 
