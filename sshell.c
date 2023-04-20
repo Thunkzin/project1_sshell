@@ -27,10 +27,6 @@ int system_sshell(char **args){
 
         */
 
-
-
-
-
         if(pid == 0){
                 execvp(args[0], args);
                 perror("execvp");
@@ -47,7 +43,7 @@ int system_sshell(char **args){
 
 char** parsing_command_to_argument(char cmd[CMDLINE_MAX], char cmd_copy[CMDLINE_MAX]){
 
-        #define SIGN_TO_BE_PARSED " >|"
+        #define SIGN_TO_BE_PARSED " >|\n"
         /*int parsing_sign = 0;*/
         char *token;
         char **args = malloc(ARGUMENT_MAX);
@@ -175,6 +171,8 @@ int main(void){
                 if (nl)
                         *nl = '\0';
 
+                fprintf(stdout,"\n");
+
                 /* Builtin command */
                 if (!strcmp(args[0], "exit")) {
                         fprintf(stderr, "Bye...\n");
@@ -196,7 +194,7 @@ int main(void){
                 /* Regular command */
                 // Parsing the commend before 
                 retval = system_sshell(args);
-                fprintf(stdout, "+ completed %s [%d]\n", cmd, retval);   
+                fprintf(stdout, "+ completed '%s' [%d]\n", cmd, retval);   
                         
         }
         return EXIT_SUCCESS;
