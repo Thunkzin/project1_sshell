@@ -150,7 +150,6 @@ int main(void){
         char **alphabet_set = malloc(MAX_ENVIRONMENT_NUMBER);
         char **stored_data_set = malloc(MAX_ENVIRONMENT_NUMBER);
         int key = 0;
-        // char **left_args = malloc(ARGUMNT_MAX);
         while (1) {
                 char *nl;
                 int retval;
