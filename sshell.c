@@ -15,6 +15,7 @@
 int system_sshell(char **args){
         pid_t pid;
         pid = fork();
+        int status = 0;
         if(pid == 0){
                 /* child */
                 execvp(args[0], args);
@@ -23,10 +24,9 @@ int system_sshell(char **args){
                 exit(1);
         }else if(pid > 0){
                 /* parent */
-                int status;
                 waitpid(pid, &status, 0);
         }
-        return 0;
+        return WEXITSTATUS(status);
 }
 
 char** parsing_command_to_argument(char cmd[CMDLINE_MAX],char cmd_copy[CMDLINE_MAX] , char to_be_parsed[2]){
@@ -62,11 +62,11 @@ int main(void){
         char cmd[CMDLINE_MAX];
         char cmd_copy[CMDLINE_MAX];
         char **args = malloc(ARGUMENT_MAX);
-        char **redirection_args;
- //       char **left_args;
-    //    char **right_args;
-        char **left_args_parsed_white_space;
- //       char **right_args_parsed_white_space;
+        // char **redirection_args;
+        // char **left_args;
+        // char **right_args;
+        // char **left_args_parsed_white_space;
+        // char **right_args_parsed_white_space;
         
         while (1) {
                 char *nl;
@@ -80,21 +80,21 @@ int main(void){
                 
                 /* Remove the last \0 */
                 // cmd[strlen(cmd)-1] = '\0';
-                if(strchr(cmd, '>') != NULL){
-                        /* Command contains redirection */
-                        printf("aaaaa");
-                        redirection_args = parsing_command_to_argument(cmd, cmd_copy, ">");
-                        printf("bbbbb");
-                     //   right_args = *redirection_args[1];
-                        left_args_parsed_white_space = parsing_command_to_argument(redirection_args[0], cmd_copy, " ");
-                       // right_args_parsed_white_space = parsing_command_to_argumen(&right_args, cmd_copy, " ");
-                        system_sshell(left_args_parsed_white_space);
+                // if(strchr(cmd, '>') != NULL){
+                //         /* Command contains redirection */
+                //         printf("aaaaa");
+                //         redirection_args = parsing_command_to_argument(cmd, cmd_copy, ">");
+                //         printf("bbbbb");
+                //         right_args = *redirection_args[1];
+                //         left_args_parsed_white_space = parsing_command_to_argument(redirection_args[0], cmd_copy, " ");
+                //         right_args_parsed_white_space = parsing_command_to_argumen(&right_args, cmd_copy, " ");
+                //         system_sshell(left_args_parsed_white_space);
                         
-                }else{
-                        /* Command withouth redirection */
-                        args = parsing_command_to_argument(cmd, cmd_copy, " ");
-                }
+                // }else{
+                //         /* Command withouth redirection */
+                // }
 
+                        args = parsing_command_to_argument(cmd, cmd_copy, " ");
 
                 /* Parse the cmd into **args[] */
                 
