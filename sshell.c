@@ -4,13 +4,28 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <dirent.h>
 #include <errno.h>
+#include <dirent.h>
+#include <fcntl.h>
 
 #define CMDLINE_MAX 512
 #define ARGUMENT_MAX 16
 #define TOKEN_LENGTH_MAX 32
 #define PIPE_NUMBER_MAX 3
+
+int redirection_stdout(char **file) {
+        int fd = open(file, O_WRONLY);
+        if (fd == -1) {
+                /* Error */
+                return -1;
+        }
+        if (dup2(fd, STDOUT_FILENO) == -1) {
+                close(fd);
+                return -1;
+        }
+        close(fd);
+        return 0;
+}
 
 int system_sshell(char **args){
         pid_t pid;
@@ -44,7 +59,7 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX],char cmd_copy[CMDLINE_M
                 // Store the rest of the tokens into args[]
                 args[position] = token;
                 position += 1;
-                token = strtok(NULL, SIGN_TO_BE_PARSED);
+                token = strtok(NULL, to_be_parsed);
         }
         if(position >= ARGUMENT_MAX){
                 fprintf(stderr,"Error: too many process arguments\n");
@@ -63,7 +78,7 @@ int main(void){
         char cmd_copy[CMDLINE_MAX];
         char **args = malloc(ARGUMENT_MAX);
         // char **redirection_args;
-        // char **left_args;
+        //
         // char **right_args;
         // char **left_args_parsed_white_space;
         // char **right_args_parsed_white_space;
@@ -93,19 +108,31 @@ int main(void){
                 // }else{
                 //         /* Command withouth redirection */
                 // }
+                if(strchr(cmd, '>') != NULL){
+                        args = parsing_command_to_argument(cmd, cmd_copy, ">");
+                        char **left_args = malloc(ARGUMENT_MAX);
+                        left_args = parsing_command_to_argument(args[0], cmd_copy, " ");
+                        printf("leftargs[0]: %s\n",left_args[0]);
+                        printf("leftargs[1]: %s\n",left_args[1]);
+                        printf("leftargs[2]: %s\n",left_args[2]);
+                        printf("leftargs[3]: %s\n",left_args[3]);
+                        printf("....\n");
+                }else{
+                args = parsing_command_to_argument(cmd, cmd_copy, " ");
 
-                        args = parsing_command_to_argument(cmd, cmd_copy, " ");
+                }
+                
 
                 /* Parse the cmd into **args[] */
                 
 
-                // printf("args[0]: %s\n",args[0]);
-                // printf("args[1]: %s\n",args[1]);
-                // printf("args[2]: %s\n",args[2]);
-                // printf("args[3]: %s\n",args[3]);
-                // printf("args[4]: %s\n",args[4]);
-                // printf("args[5]: %s\n",args[5]);
-                // printf("args[6]: %s\n",args[6]);
+                printf("args[0]: %s\n",args[0]);
+                printf("args[1]: %s\n",args[1]);
+                printf("args[2]: %s\n",args[2]);
+                printf("args[3]: %s\n",args[3]);
+                printf("args[4]: %s\n",args[4]);
+                printf("args[5]: %s\n",args[5]);
+                printf("args[6]: %s\n",args[6]);
 
 
                 /* Redo the loop if no input */
@@ -160,10 +187,9 @@ int main(void){
                         fprintf(stderr, "+ completed '%s' [%d]\n", cmd, retval);   
                         free(args);
                 }
-                
+                free(args[0]);
 
         }
 
         return EXIT_SUCCESS;
 }
-
