@@ -20,7 +20,6 @@ of printing it to the terminal.
 communication using pipes. 
 6. Error management.
 
-
 ### Parsing commands
 
 The `parsing_command_to_argument()` function is responsible for parsing a command 
@@ -30,9 +29,12 @@ the program name (the first argument) from the arguments passed to the program (
 subsequent arguments), and to store them in separate elements of the args array. The 
 function also checks for errors and returns a pointer to the args array.
 
-The function takes two parameters: `cmd`, a character array containing the command 
+The function takes three parameters: `cmd`, a character array containing the command 
 entered by the user. `cmd_copy`, a character array used as a copy of `cmd` to avoid 
-modifying the original command string.
+modifying the original command string. And `char to_be_parsed[]`, a character that 
+we like to used as a dilemma. Therefore, despite the commandline will includes
+redirection sign, white space, and pipe, we can brake up the parsing stage with 
+different dilemma when we needs.
 
 First, the function uses the `strtok()` function to tokenize the cmd_copy 
 string, using whitespace as the delimiter. It then stores each token in the `arg` 
@@ -116,25 +118,44 @@ all child processes to complete using the `waitpid()` system call. The exit stat
 each child process is checked using the `WIFEXITED()` and `WEXITSTATUS()` macros to 
 determine whether the child process completed successfully or with an error.
 
-### Error management
 
+### Error management
 When it comes to the Error management, it can be roughly derived into three kinds, 
 which are Failure of library functions, Errors during the parsing of the command line,
 and Errors during the launching of the job. The Failure of library functions will be 
 handled in the `system_sshell()`, by the perror() function right after the execvp(), 
-and will be directed into stderr. For instance, the error that we encountered the most
-during the projects is the Bad Address error, which happened occasionally. 
+and will be directed into stderr. 
+
+For instance, the error that we encountered the most
+during the projects is the Bad Address error, which happened occasionally in the 
+mac's build-in terminal, but always happens in LINUX system's machines. 
+Unfortunately, we are not able to solve this issues on times.
 
 For the errors during the parsing of the command line, these are handled after or in 
 `parsing_command_to_argument()` function, and this kinds of errors are mainly caused 
 invalid user input if having correct parsing function. Therefore, among three kinds 
-of error, this is the relatively easier one to deal with will doing the project.
+of error, this is the relatively easier one to deal with while doing the project.
 
 Finally, the Launching errors are either handled in the build-in command section or
 in the `system_sshell()` function, and it wasn't too difficult to deal with these
 kinds of error since there're pretty much single line function that can directly 
-do the job for us.
+do the job for us. For example, when we're holding the "Error: cannot cd into
+directory," we've just simply used the 'opendir()' function to detected if the
+directories existed.
 
 ### Debugging issues
+The very first significant bugs that we encountered is to decide which lines should 
+be directed out into stderr and stdout while applying fprintf() function. And the 
+most time consuming bugs that we had was that when piping the command line from 
+echo function to the sshell, the stdout doesn't print out new line right after the
+command line is inputed. 
 
+For example, when input the command line `echo -e "ls\nexit\n" | ./sshell`  in the
+local shell, the output becomes like sshell@ucd ls"output of ls", which sticked 
+behind the sshell@ls without changing line.
+
+Finally, the bugs that we didn't solve is the Bad Address error which happened 
+when entering several command with options. For instance, "mkdir -p dir_test"
+will cause a bad address error, but "mkdir dir_test" wouldn't. However, when
+we use date command to test out, both "date -u" and "date" works for our sshell.
 
