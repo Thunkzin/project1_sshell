@@ -72,7 +72,15 @@ as an argument. The program then prints the completed command with the exit stat
 using `fprintf()` on stderr.
 
 ### Output redirection
-
+The output redirection function will be called when the `cmd` includes `>` sign, which
+will be detected before applying `parsing_command_to_argument()` function. Firstly, 
+parse the `cmd` to two strings (left hand sides and right hand sides string) by 
+calling `parsing_command_to_argument()` function with `>` being used as 
+`char to_be_parsed[2]` parameter. Secondly, parsing these two strings again but using 
+white space as the `char to_be_parsed[2]` parameter this time. Then, call the 
+redirection function to redirect the stdout to the file's directory by `dup2()` funciton. 
+Finally, run the left hand sides string by implementing system_sshell, and the output 
+will be directed into the file (right hand sides string).
 
 ### Piping
  
