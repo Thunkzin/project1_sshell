@@ -13,13 +13,10 @@
 #define TOKEN_LENGTH_MAX 32
 #define PIPE_NUMBER_MAX 3
 
-int redirection_stdout(char **file) {
+int redirection(char **file) {
         int fd = open(file, O_WRONLY);
-        if (fd == -1) {
-                /* Error */
-                return -1;
-        }
         if (dup2(fd, STDOUT_FILENO) == -1) {
+                /* Error*/
                 close(fd);
                 return -1;
         }
