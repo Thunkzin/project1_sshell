@@ -158,7 +158,14 @@ int main(void){
 
                 if(strchr(cmd, '>') != NULL){
                         args = parsing_command_to_argument(cmd, cmd_copy, ">");
-
+                        if(args[1] == NULL){
+                                fprintf(stderr,"Error: no output file\n");
+                                continue;
+                        }
+                        if(!opendir(args[1])){
+                                fprintf(stderr,"Error: cannot open output file\n");
+                                continue;
+                        }
                         // printf("leftargs[0]: %s\n",left_args[0]);
                         // printf("leftargs[1]: %s\n",left_args[1]);
                 }else{
@@ -176,8 +183,7 @@ int main(void){
 
 
                 /* Redo the loop if no input */
-                if (!strcmp(args[0], "\n")){
-                        free(args);
+                if (args[0] ==NULL){
                         continue;
                 }
 
