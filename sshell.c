@@ -12,7 +12,6 @@
 #define TOKEN_LENGTH_MAX 32
 #define PIPE_NUMBER_MAX 3
 
-
 int system_sshell(char **args){
         pid_t pid;
         pid = fork();
@@ -40,7 +39,7 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX],char cmd_copy[CMDLINE_M
 
        /* Get the first Token , program, args[0]*/
         token = strtok(cmd_copy, to_be_parsed);
-
+        
         while(token != NULL) {
                 // Store the rest of the tokens into args[]
                 args[position] = token;
@@ -62,10 +61,12 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX],char cmd_copy[CMDLINE_M
 int main(void){
         char cmd[CMDLINE_MAX];
         char cmd_copy[CMDLINE_MAX];
-        char **args;
-        //char **first_args_redirection_raw;
-        //char **first_args_redirection;
-
+        char **args = malloc(ARGUMENT_MAX);
+        char **redirection_args;
+ //       char **left_args;
+    //    char **right_args;
+        char **left_args_parsed_white_space;
+ //       char **right_args_parsed_white_space;
         
         while (1) {
                 char *nl;
@@ -79,9 +80,24 @@ int main(void){
                 
                 /* Remove the last \0 */
                 // cmd[strlen(cmd)-1] = '\0';
+                if(strchr(cmd, '>') != NULL){
+                        /* Command contains redirection */
+                        printf("aaaaa");
+                        redirection_args = parsing_command_to_argument(cmd, cmd_copy, ">");
+                        printf("bbbbb");
+                     //   right_args = *redirection_args[1];
+                        left_args_parsed_white_space = parsing_command_to_argument(redirection_args[0], cmd_copy, " ");
+                       // right_args_parsed_white_space = parsing_command_to_argumen(&right_args, cmd_copy, " ");
+                        system_sshell(left_args_parsed_white_space);
+                        
+                }else{
+                        /* Command withouth redirection */
+                        args = parsing_command_to_argument(cmd, cmd_copy, " ");
+                }
+
 
                 /* Parse the cmd into **args[] */
-                args = parsing_command_to_argument(cmd, cmd_copy, " ");
+                
 
                 // printf("args[0]: %s\n",args[0]);
                 // printf("args[1]: %s\n",args[1]);
@@ -94,6 +110,7 @@ int main(void){
 
                 /* Redo the loop if no input */
                 if (!strcmp(args[0], "\n")){
+                        free(args);
                         continue;
                 }
 
@@ -121,6 +138,7 @@ int main(void){
                         getcwd(cwd, sizeof(cwd));
                         fprintf(stdout, "%s\n",cwd);
                         fprintf(stderr, "+ completed '%s' [0]\n", cmd);
+                        free(args);
                         continue;
                 }
                 if (!strcmp(args[0], "cd")) {
@@ -134,12 +152,18 @@ int main(void){
                                 fprintf(stderr,"Error: cannot cd into directory\n");
                                 fprintf(stderr, "+ completed '%s' [1]\n", cmd);
                         }
+                        free(args);
                         continue;
+                }else{
+                        /* Regular command */
+                        retval = system_sshell(args);
+                        fprintf(stderr, "+ completed '%s' [%d]\n", cmd, retval);   
+                        free(args);
                 }
-                /* Regular command */
-                retval = system_sshell(args);
-                fprintf(stderr, "+ completed '%s' [%d]\n", cmd, retval);   
-                free(args);
+                
+
         }
+
         return EXIT_SUCCESS;
 }
+
