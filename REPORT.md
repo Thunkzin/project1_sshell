@@ -30,14 +30,9 @@ the program name (the first argument) from the arguments passed to the program (
 subsequent arguments), and to store them in separate elements of the args array. The 
 function also checks for errors and returns a pointer to the args array.
 
-The function takes three parameters: `cmd`, a character array containing the command 
+The function takes two parameters: `cmd`, a character array containing the command 
 entered by the user. `cmd_copy`, a character array used as a copy of `cmd` to avoid 
-modifying the original command string. And `char to_be_parsed[]`, a character that 
-we like to used as a dilemma. Therefore, despite the commandline will includes
-redirection sign, white space, and pipe, we can brake up the parsing stage with 
-different dilemma when we needs.
-
-
+modifying the original command string.
 
 First, the function uses the `strtok()` function to tokenize the cmd_copy 
 string, using whitespace as the delimiter. It then stores each token in the `arg` 
@@ -45,8 +40,6 @@ array, incrementing the position variable each time to move to the next element 
 array.  If the number of arguments parsed exceeds the maximum number of arguments 
 allowed (ARGUMENT_MAX), an error message is printed to the standard error stream and 
 args[0] is set to NULL to signal to the shell to start a new loop.
-
-
 
 ### Builtin Commands
 
@@ -123,34 +116,25 @@ all child processes to complete using the `waitpid()` system call. The exit stat
 each child process is checked using the `WIFEXITED()` and `WEXITSTATUS()` macros to 
 determine whether the child process completed successfully or with an error.
 
-
 ### Error management
+
 When it comes to the Error management, it can be roughly derived into three kinds, 
 which are Failure of library functions, Errors during the parsing of the command line,
 and Errors during the launching of the job. The Failure of library functions will be 
 handled in the `system_sshell()`, by the perror() function right after the execvp(), 
-and will be directed into stderr. 
-
-For instance, the error that we encountered the most
-during the projects is the Bad Address error, which happened occasionally in the 
-mac's build-in terminal, but always happens in LINUX system's machines. 
-Unfortunately, we are not able to solve this issues on times.
+and will be directed into stderr. For instance, the error that we encountered the most
+during the projects is the Bad Address error, which happened occasionally. 
 
 For the errors during the parsing of the command line, these are handled after or in 
 `parsing_command_to_argument()` function, and this kinds of errors are mainly caused 
 invalid user input if having correct parsing function. Therefore, among three kinds 
-of error, this is the relatively easier one to deal with while doing the project.
+of error, this is the relatively easier one to deal with will doing the project.
 
 Finally, the Launching errors are either handled in the build-in command section or
 in the `system_sshell()` function, and it wasn't too difficult to deal with these
 kinds of error since there're pretty much single line function that can directly 
-do the job for us. For example, when we're holding the "Error: cannot cd into
-directory," we've just simply used the 'opendir()' function to detected if the
-directories existed.
+do the job for us.
 
-
-
-
-
+### Debugging issues
 
 
