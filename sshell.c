@@ -13,10 +13,13 @@
 #define TOKEN_LENGTH_MAX 32
 #define PIPE_NUMBER_MAX 3
 
-int redirection(char **file) {
+int redirection_stdout(char **file) {
         int fd = open(file, O_WRONLY);
+        if (fd == -1) {
+                /* Error */
+                return -1;
+        }
         if (dup2(fd, STDOUT_FILENO) == -1) {
-                /* Error*/
                 close(fd);
                 return -1;
         }
@@ -69,6 +72,83 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX],char cmd_copy[CMDLINE_M
 // void redirection(char** before_redirection, char** after_redirection){
 
 // }
+
+
+void pipeline(char *cmd) {
+    char *commands = cmd[CMDLINE_MAX];
+    int num_pipes = strlen(commands) - 1;
+    int pipe_fds[PIPE_NUMBER_MAX][2];
+    pid_t child_pids[CMDLINE_MAX];
+
+    // Create the pipes
+    for (int i = 0; i < num_pipes; i++) {
+        if (pipe(pipe_fds[i]) == -1) {
+            perror("pipe");
+            fprintf(stderr,"Error: no command found\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    // Fork the child processes
+    for (int i = 0; i <= num_pipes; i++) {
+        if ((child_pids[i] = fork()) == -1) {
+            perror("fork");
+            fprintf(stderr, "Error: missing command\n");
+            exit(EXIT_FAILURE);
+        }
+
+        if (child_pids[i] == 0) { // Child process
+            // Connect to the previous pipe (if there is one)
+            if (i > 0) {
+                if (dup2(pipe_fds[i-1][0], STDIN_FILENO) == -1) {
+                    perror("dup2");
+                    exit(EXIT_FAILURE);
+                }
+                close(pipe_fds[i-1][0]);
+            }
+
+            // Connect to the next pipe (if there is one)
+            if (i < num_pipes) {
+                if (dup2(pipe_fds[i][1], STDOUT_FILENO) == -1) {
+                    perror("dup2");
+                    exit(EXIT_FAILURE);
+                }
+                close(pipe_fds[i][1]);
+            }
+
+            // Parse the command and execute it
+            char *args[256];
+            char *token;
+            int j = 0;
+            token = strtok(commands[i], " \t\n");
+            while (token != NULL) {
+                args[j] = token;
+                j++;
+                token = strtok(NULL, " \t\n");
+            }
+            args[j] = NULL;
+            execvp(args[0], args);
+            perror("execvp");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    // Close all the pipes
+    for (int i = 0; i < num_pipes; i++) {
+        close(pipe_fds[i][0]);
+        close(pipe_fds[i][1]);
+    }
+
+    // Wait for all the child processes to terminate
+    int status;
+    for (int i = 0; i <= num_pipes; i++) {
+        waitpid(child_pids[i], &status, 0);
+        if (WIFEXITED(status)) {
+            printf("[%d]", WEXITSTATUS(status));
+        }
+    }
+    printf("\n");
+}
 
 int main(void){
         char cmd[CMDLINE_MAX];
