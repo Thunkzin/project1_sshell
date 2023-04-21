@@ -16,6 +16,10 @@ The implementation of this program follows following steps:
 3. Implementations of `builtin` commands.
 4. Manipulation of stdout file descriptor to `redirect` to the output file instead 
 of printing it to the terminal. 
+5. Pipeline function using a combination of parsing, forking, and inter-process 
+communication using pipes. 
+6. Error management.
+
 
 ### Parsing commands
 
@@ -70,11 +74,39 @@ using `fprintf()` on stderr.
 ### Output redirection
 
 
-
-
 ### Piping
+ 
+The `pipeline()`function in sshell is responsible for handling command pipelines, 
+which allows multiple commands to be executed in sequence where the output of each 
+command is passed as input to the next command.
 
+The function takes in a command string as an argument, which contains multiple 
+commands separated by the pipe symbol "|". It then splits the command string into 
+separate commands and creates pipes to connect the input and output of each command. 
+Finally, it forks child processes to execute each command and waits for all child 
+processes to complete.
 
+The first step in `pipeline()` is to parse the input command string into separate 
+commands. This is done using the `strtok()` function to split the string into tokens 
+using the "|" symbol as the delimiter. The resulting array of commands is then 
+processed in a loop.
+
+Forking child processes: For each command, a child process is forked using the `fork()` 
+system call. The child process is responsible for executing the command. Before 
+executing the command, the child process sets up the standard input and output using 
+the pipe file descriptors created in the previous step. The `dup2()` system call is used 
+to redirect the standard input or output of the child process to the read or write end 
+of the appropriate pipe.
+
+Once the child process has set up its standard input and output, it executes the 
+command using the execvp() system call. The arguments to `evecvp()` are the command and 
+its arguments, which were extracted earlier in the parsing step.
+
+After all the child processes have been forked, the parent process closes all the pipe 
+file descriptors, since they are no longer needed. The parent process also waits for 
+all child processes to complete using the `waitpid()` system call. The exit status of 
+each child process is checked using the `WIFEXITED()` and `WEXITSTATUS()` macros to 
+determine whether the child process completed successfully or with an error.
 
 
 ### Error management
