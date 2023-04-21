@@ -147,10 +147,10 @@ int main(void){
         char cmd[CMDLINE_MAX];
         char cmd_copy[CMDLINE_MAX];
         char **args = malloc(ARGUMENT_MAX);
-        // char **alphabet_set = malloc(MAX_ENVIRONMENT_NUMBER);
-        // char **stored_data_set = malloc(MAX_ENVIRONMENT_NUMBER);
-        // int key = 0;
-        // char **left_args = malloc(ARGUMENT_MAX);
+        char **alphabet_set = malloc(MAX_ENVIRONMENT_NUMBER);
+        char **stored_data_set = malloc(MAX_ENVIRONMENT_NUMBER);
+        int key = 0;
+        char **left_args = malloc(ARGUMENT_MAX);
         while (1) {
                 char *nl;
                 int retval;
@@ -219,24 +219,24 @@ int main(void){
                         continue;
                 }
 
-        //        if (!strcmp(args[0], "set")) {
-        //                 /* Store the environment variables and its data into pointers */
-        //                 alphabet_set[key] = args[1];
-        //                 stored_data_set[key] = args[2];
-        //                 key++;
-        //                 continue;
-        //         }                
-        //         if(strchr(cmd, '$') != NULL){
-        //                 args = parsing_command_to_argument(cmd, cmd_copy, " $");
-        //                 /* Use double loop to check if the $alphabet in the input is stored in alphabet_set */
-        //                 for(int count = 0 ; count <= ARGUMENT_MAX; count ++){
-        //                         for(int alphabet_count = 0 ; alphabet_count <= 25 ; alphabet_count ++){
-        //                                 if (!strcmp(args[count], alphabet_set[alphabet_count])) {
-        //                                         args[count] = stored_data_set[alphabet_count];
-        //                                 }               
-        //                         }
-        //                 }
-        //         }
+               if (!strcmp(args[0], "set")) {
+                        /* Store the environment variables and its data into pointers */
+                        alphabet_set[key] = args[1];
+                        stored_data_set[key] = args[2];
+                        key++;
+                        continue;
+                }                
+                if(strchr(cmd, '$') != NULL){
+                        args = parsing_command_to_argument(cmd, cmd_copy, " $");
+                        /* Use double loop to check if the $alphabet in the input is stored in alphabet_set */
+                        for(int count = 0 ; count <= ARGUMENT_MAX; count ++){
+                                for(int alphabet_count = 0 ; alphabet_count <= 25 ; alphabet_count ++){
+                                        if (!strcmp(args[count], alphabet_set[alphabet_count])) {
+                                                args[count] = stored_data_set[alphabet_count];
+                                        }               
+                                }
+                        }
+                }
         //         printf("args[0]: %s\n",args[0]);
         //         printf("args[1]: %s\n",args[1]);
         //         printf("args[2]: %s\n",args[2]);
