@@ -13,20 +13,6 @@
 #define TOKEN_LENGTH_MAX 32
 #define PIPE_NUMBER_MAX 3
 
-int redirection_stdout(char **file) {
-        int fd = open(file, O_WRONLY);
-        if (fd == -1) {
-                /* Error */
-                return -1;
-        }
-        if (dup2(fd, STDOUT_FILENO) == -1) {
-                close(fd);
-                return -1;
-        }
-        close(fd);
-        return 0;
-}
-
 int system_sshell(char **args){
         pid_t pid;
         pid = fork();
@@ -43,11 +29,10 @@ int system_sshell(char **args){
         }
         return WEXITSTATUS(status);
 }
-
 char** parsing_command_to_argument(char cmd[CMDLINE_MAX],char cmd_copy[CMDLINE_MAX] , char to_be_parsed[2]){
         #define SIGN_TO_BE_PARSED " \0"
         char *token;
-        char **args = malloc(ARGUMENT_MAX);
+        char **token_array = malloc(ARGUMENT_MAX);
         int position = 0;
         strcpy(cmd_copy, cmd);
         cmd_copy[strlen(cmd_copy)-1] = '\0';
@@ -57,25 +42,31 @@ char** parsing_command_to_argument(char cmd[CMDLINE_MAX],char cmd_copy[CMDLINE_M
         
         while(token != NULL) {
                 // Store the rest of the tokens into args[]
-                args[position] = token;
+                token_array[position] = token;
                 position += 1;
                 token = strtok(NULL, to_be_parsed);
         }
         if(position >= ARGUMENT_MAX){
                 fprintf(stderr,"Error: too many process arguments\n");
                 /* Set args[0] to be NULL so the shell will start a new loop */
-                args[0] = NULL;
+                token_array[0] = NULL;
         }
-        return(args);
+        return(token_array);
 }
 
-// void redirection(char** before_redirection, char** after_redirection){
-
-// }
-
+int redirection(char **file) {
+        int fd = open(*file, O_WRONLY);
+        if (dup2(fd, STDOUT_FILENO) == -1) {
+                /* Error*/
+                close(fd);
+                return -1;
+        }
+        close(fd);
+        return 0;
+}
 
 void pipeline(char *cmd) {
-    char *commands = cmd[CMDLINE_MAX];
+    char *commands = &cmd[CMDLINE_MAX];
     int num_pipes = strlen(commands) - 1;
     int pipe_fds[PIPE_NUMBER_MAX][2];
     pid_t child_pids[CMDLINE_MAX];
@@ -120,7 +111,7 @@ void pipeline(char *cmd) {
             char *args[256];
             char *token;
             int j = 0;
-            token = strtok(commands[i], " \t\n");
+            token = strtok(&commands[i], " \t\n");
             while (token != NULL) {
                 args[j] = token;
                 j++;
@@ -150,16 +141,12 @@ void pipeline(char *cmd) {
     printf("\n");
 }
 
+
 int main(void){
         char cmd[CMDLINE_MAX];
         char cmd_copy[CMDLINE_MAX];
         char **args = malloc(ARGUMENT_MAX);
-        // char **redirection_args;
-        //
-        // char **right_args;
-        // char **left_args_parsed_white_space;
-        // char **right_args_parsed_white_space;
-        
+        // char **left_args = malloc(ARGUMENT_MAX);
         while (1) {
                 char *nl;
                 int retval;
@@ -169,47 +156,23 @@ int main(void){
                 /* Get command line */
                 fgets(cmd, CMDLINE_MAX, stdin);
 
-                
-                /* Remove the last \0 */
-                // cmd[strlen(cmd)-1] = '\0';
-                // if(strchr(cmd, '>') != NULL){
-                //         /* Command contains redirection */
-                //         printf("aaaaa");
-                //         redirection_args = parsing_command_to_argument(cmd, cmd_copy, ">");
-                //         printf("bbbbb");
-                //         right_args = *redirection_args[1];
-                //         left_args_parsed_white_space = parsing_command_to_argument(redirection_args[0], cmd_copy, " ");
-                //         right_args_parsed_white_space = parsing_command_to_argumen(&right_args, cmd_copy, " ");
-                //         system_sshell(left_args_parsed_white_space);
-                        
-                // }else{
-                //         /* Command withouth redirection */
-                // }
                 if(strchr(cmd, '>') != NULL){
                         args = parsing_command_to_argument(cmd, cmd_copy, ">");
-                        char **left_args = malloc(ARGUMENT_MAX);
-                        left_args = parsing_command_to_argument(args[0], cmd_copy, " ");
-                        printf("leftargs[0]: %s\n",left_args[0]);
-                        printf("leftargs[1]: %s\n",left_args[1]);
-                        printf("leftargs[2]: %s\n",left_args[2]);
-                        printf("leftargs[3]: %s\n",left_args[3]);
-                        printf("....\n");
-                }else{
-                args = parsing_command_to_argument(cmd, cmd_copy, " ");
 
+                        // printf("leftargs[0]: %s\n",left_args[0]);
+                        // printf("leftargs[1]: %s\n",left_args[1]);
+                }else{
+                        args = parsing_command_to_argument(cmd, cmd_copy, " ");
                 }
-                
 
                 /* Parse the cmd into **args[] */
-                
-
-                printf("args[0]: %s\n",args[0]);
-                printf("args[1]: %s\n",args[1]);
-                printf("args[2]: %s\n",args[2]);
-                printf("args[3]: %s\n",args[3]);
-                printf("args[4]: %s\n",args[4]);
-                printf("args[5]: %s\n",args[5]);
-                printf("args[6]: %s\n",args[6]);
+                // printf("args[0]: %s\n",args[0]);
+                // printf("args[1]: %s\n",args[1]);
+                // printf("args[2]: %s\n",args[2]);
+                // printf("args[3]: %s\n",args[3]);
+                // printf("args[4]: %s\n",args[4]);
+                // printf("args[5]: %s\n",args[5]);
+                // printf("args[6]: %s\n",args[6]);
 
 
                 /* Redo the loop if no input */
@@ -264,7 +227,6 @@ int main(void){
                         fprintf(stderr, "+ completed '%s' [%d]\n", cmd, retval);   
                         free(args);
                 }
-                free(args[0]);
 
         }
 
