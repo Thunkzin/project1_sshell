@@ -79,7 +79,7 @@ calling `parsing_command_to_argument()` function with `>` being used as
 `char to_be_parsed[2]` parameter. Secondly, parsing these two strings again but using 
 white space as the `char to_be_parsed[2]` parameter this time. Then, call the 
 redirection function to redirect the stdout to the file's directory by `dup2()` funciton. 
-Finally, run the left hand sides string by implementing system_sshell, and the output 
+Finally, run the left hand sides string by implementing `system_sshell()`, and the output 
 will be directed into the file (right hand sides string).
 
 ### Piping
@@ -118,3 +118,20 @@ determine whether the child process completed successfully or with an error.
 
 
 ### Error management
+When it comes to the Error management, it can be roughly derived into three kinds, 
+which are Failure of library functions, Errors during the parsing of the command line,
+and Errors during the launching of the job. The Failure of library functions will be 
+handled in the `system_sshell()`, by the perror() function right after the execvp(), 
+and will be directed into stderr. For instance, the error that we encountered the most
+during the projects is the Bad Address error, which happened occasionally. 
+
+For the errors during the parsing of the command line, these are handled after or in 
+`parsing_command_to_argument()` function, and this kinds of errors are mainly caused 
+invalid user input if having correct parsing function. Therefore, among three kinds 
+of error, this is the relatively easier one to deal with will doing the project.
+
+Finally, the Launching errors are either handled in the build-in command section or
+in the `system_sshell()` function, and it wasn't too difficult to deal with these
+kinds of error since there're pretty much single line function that can directly 
+do the job for us.
+
