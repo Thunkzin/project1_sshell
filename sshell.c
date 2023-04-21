@@ -12,6 +12,7 @@
 #define ARGUMENT_MAX 16
 #define TOKEN_LENGTH_MAX 32
 #define PIPE_NUMBER_MAX 3
+#define MAX_ENVIRONMENT_NUMBER 25
 
 int system_sshell(char **args){
         pid_t pid;
@@ -29,7 +30,7 @@ int system_sshell(char **args){
         }
         return WEXITSTATUS(status);
 }
-char** parsing_command_to_argument(char cmd[CMDLINE_MAX],char cmd_copy[CMDLINE_MAX] , char to_be_parsed[2]){
+char** parsing_command_to_argument(char cmd[CMDLINE_MAX],char cmd_copy[CMDLINE_MAX] , char to_be_parsed[]){
         #define SIGN_TO_BE_PARSED " \0"
         char *token;
         char **token_array = malloc(ARGUMENT_MAX);
@@ -146,6 +147,9 @@ int main(void){
         char cmd[CMDLINE_MAX];
         char cmd_copy[CMDLINE_MAX];
         char **args = malloc(ARGUMENT_MAX);
+        char **alphabet_set = malloc(MAX_ENVIRONMENT_NUMBER);
+        char **stored_data_set = malloc(MAX_ENVIRONMENT_NUMBER);
+        int key = 0;
         // char **left_args = malloc(ARGUMENT_MAX);
         while (1) {
                 char *nl;
@@ -214,6 +218,33 @@ int main(void){
                         free(args);
                         continue;
                 }
+
+               if (!strcmp(args[0], "set")) {
+                        /* Store the environment variables and its data into pointers */
+                        alphabet_set[key] = args[1];
+                        stored_data_set[key] = args[2];
+                        key++;
+                        continue;
+                }                
+                if(strchr(cmd, '$') != NULL){
+                        args = parsing_command_to_argument(cmd, cmd_copy, " $");
+                        /* Use double loop to check if the $alphabet in the input is stored in alphabet_set */
+                        for(int count = 0 ; count <= ARGUMENT_MAX; count ++){
+                                for(int alphabet_count = 0 ; alphabet_count <= 25 ; alphabet_count ++){
+                                        if (!strcmp(args[count], alphabet_set[alphabet_count])) {
+                                                args[count] = stored_data_set[alphabet_count];
+                                        }               
+                                }
+                        }
+                }
+                printf("args[0]: %s\n",args[0]);
+                printf("args[1]: %s\n",args[1]);
+                printf("args[2]: %s\n",args[2]);
+                printf("args[3]: %s\n",args[3]);
+                printf("args[4]: %s\n",args[4]);
+                printf("args[5]: %s\n",args[5]);
+                printf("args[6]: %s\n",args[6]);
+
                 if (!strcmp(args[0], "cd")) {
                         DIR* directory = opendir(args[1]);
                         if (directory) {
