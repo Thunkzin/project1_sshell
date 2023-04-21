@@ -2,11 +2,11 @@
 
 ## Summary
 
-This program, `sshell`, can perform as a simple shell where it interprets the 
-command-lines that the user inputs from the terminal and executes them. The core 
-features of the program includes execution of user-supplied commands with optional 
-arguments, selection of the standard output of commands to files, and compositions of 
-commands via piping. 
+The `sshell` program is a basic shell that allows users to input command-lines and 
+have them executed. The program has several core features, including the ability to 
+execute commands with optional arguments, redirect command output to files, and pipe 
+commands together. The program accomplishes these basic I/O operations through several 
+key functions.
 
 ## Implementation
 
